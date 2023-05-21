@@ -12,6 +12,7 @@ from blob import upload_objects_to_container,get_all_object
 # datos_test = ./data/base_forecasting.csv
 
 def main(myblob: func.InputStream):
+def main():    
     logging.info(f"Python blob trigger function processed blob \n"
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
@@ -35,5 +36,5 @@ def main(myblob: func.InputStream):
     print(base_prediccion) #
     
 
-
+main()
     # upload_objects_to_container(blob_data_list,"container-output")
