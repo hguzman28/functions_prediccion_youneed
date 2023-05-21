@@ -1,0 +1,12 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "myblob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "cointainer-s3/{name}.txt",
+      "connection": "sas3azureblobs_STORAGE"
+    }
+  ]
+}
