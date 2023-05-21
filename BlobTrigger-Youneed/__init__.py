@@ -2,7 +2,7 @@ import logging
 from pandas import concat
 import pandas as pd
 
-import azure.functions as func
+# import azure.functions as func
 from main import Predict
 from io import BytesIO
 
@@ -11,7 +11,7 @@ from blob import upload_objects_to_container,get_all_object
 
 # datos_test = ./data/base_forecasting.csv
 
-def main(myblob: func.InputStream):
+# def main(myblob: func.InputStream):
 def main():    
     logging.info(f"Python blob trigger function processed blob \n"
                  f"Name: {myblob.name}\n"
