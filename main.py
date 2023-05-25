@@ -65,7 +65,7 @@ class Predict:
 
         base_prediccion['intervalo1'] = self.ptools.intervalo_1(base_prediccion)
         
-        base_prediccion = base_prediccion.drop(['fechahora','demanda','intervalo1'], axis=1)
+        base_prediccion = base_prediccion.drop(['demanda'], axis=1)
         
         return base_prediccion
     

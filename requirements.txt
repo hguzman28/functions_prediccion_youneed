@@ -12,3 +12,5 @@ Pillow
 azure-storage-blob
 python-dotenv
 pandas
+scikit-learn
+azure-identity
