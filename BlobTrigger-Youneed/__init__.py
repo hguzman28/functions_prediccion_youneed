@@ -9,6 +9,7 @@ import sklearn
 from main import Predict
 from io import BytesIO
 from blob import upload_objects_to_container,get_all_object
+import sys
 
 
 def main(myblob: func.InputStream):
@@ -33,7 +34,6 @@ def main(myblob: func.InputStream):
             scaler = pickle.load(f)
     
         fecha_inicio_test, fecha_final_test = '2023-05-01', '2023-05-31'
-        logging.info("Read train_set and base_forecasting")
 
         data_preparation_api=pd.read_csv("/tmp/train_set.csv")
         data_train_endpoint=pd.read_csv("/tmp/base_forecasting.csv")
@@ -44,17 +44,28 @@ def main(myblob: func.InputStream):
         nombres_datos_test = data_train_endpoint.columns
         nombres_datos_test = nombres_datos_test[0:-1]
 
-        logging.info("nombres_datos_test OK")
+        logging.info("nombres_datos_test check")
+
 
         prediction_object = Predict()
         demanda_p = prediction_object.final_prediction(model=model, x_test=data_train_endpoint)
-        logging.info("demanda_p OK")
+
+        logging.info("demanda_p check")
+        
+
         base_prediccion = prediction_object.fun_dataset_prediccion(ypred=demanda_p, x_test=data_train_endpoint, escalador=scaler, nombres_datos_test=nombres_datos_test, datos_testeo=datos_test, fecha_test=fecha_test)
+
+        logging.info("base_prediccion check")
         base_prediccion2= base_prediccion[['fechahora', 'Prediccion', 'intervalo1']]
-        logging.info("base_prediccion2 OK")
+        logging.info("base_prediccion2 check")
+
         print(base_prediccion2)
 
-        upload_objects_to_container([base_prediccion2],"container-output")
-    except Exception as e:
-        print(e)
-        raise e   
+        base_prediccion2.to_csv("/tmp/base_prediccion2.csv", index=False)
+
+        upload_objects_to_container(["/tmp/base_prediccion2.csv"],"container-output")
+
+        logging.info("upload_objects_to_container check")
+    except:
+        logging.info('ERROR ##')
+        logging.info("Unexpected error:", sys.exc_info())

@@ -8,9 +8,9 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
-Pillow
+Pillow==9.4.0
 azure-storage-blob
 python-dotenv
-pandas
-scikit-learn
+pandas==1.5.2
+scikit-learn==1.2.2
 azure-identity
