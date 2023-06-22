@@ -25,27 +25,10 @@ def get_dt_historico():
 def final_df():
     try:
         dt_historico = get_dt_historico()
-
         
-
-        logging.info("check dt_historico ##")
-        logging.info(dt_historico.shape)
-        print("Hola")
-        print(dt_historico.head(5))
-        
-
-        dt_Data_to_dashboard = pd.read_csv("/tmp/data_to_dashboard.csv")
-
-        logging.info("check dt_Data_to_dashboard")
-        logging.info(dt_Data_to_dashboard.shape)
-        print(dt_Data_to_dashboard.head(5))
-
-  
-        
+        dt_Data_to_dashboard = pd.read_csv("/tmp/data_to_dashboard.csv")        
         dt_prediccion = pd.read_csv("/tmp/base_prediccion2.csv")
 
-        logging.info("check dt_prediccion")
-        logging.info(dt_prediccion.shape)
 
         # Establecer la configuración regional antes de la conexión
         connection_string = (
@@ -66,24 +49,14 @@ def final_df():
             if pd.isnull(demanda):
                 fecha_formatted = fecha.strftime("%Y-%m-%d")  # Formatear fecha como "AAAA-MM-DD"
                 if fecha_formatted in dt_Data_to_dashboard['fechahora'].astype(str).str[:10].values:
-                    # logging.info("#### DEMANDA VACÍA EN HISTORICO #####")
-                    # logging.info(fecha_formatted)
                     id_historico = row['id']  # Obtener el id del registro en dt_historico
                     demanda_actualizada = dt_Data_to_dashboard.loc[dt_Data_to_dashboard['fechahora'].astype(str).str[:10] == fecha_formatted, 'demanda'].values[0]
 
 
                     if len(str(demanda_actualizada)) > 1:
                         demanda_actualizada = str(demanda_actualizada).replace(",", ".")
-                        # logging.info(demanda_actualizada)
-                        # dt_historico.at[index, 'demanda'] = dt_Data_to_dashboard.loc[dt_Data_to_dashboard['fechahora'].astype(str).str[:10] == fecha_formatted, 'demanda'].values[0]
                         dt_historico.at[index, 'demanda'] = demanda_actualizada
 
-                        # # Actualizar el registro en la base de datos
-                        # with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-                        #     cursor = conn.cursor()
-                        #     query = f"UPDATE pruebas2 SET demanda = {demanda_actualizada} WHERE id = {id_historico}"
-                        #     cursor.execute(query)
-                        #     conn.commit()
 
                         # Actualizar el registro en la base de datos
                         with pyodbc.connect(connection_string) as conn:
@@ -122,19 +95,7 @@ def final_df():
                 conn.commit()
      
 
-
-        logging.info("df_historico after update ###")
-        logging.info(dt_historico.shape)
         final_df = pd.concat([dt_historico, dt_prediccion], ignore_index=True)
-
-                # Insertar las filas nuevas en la tabla pruebas2
-        # with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-        #     # Insertar filas nuevas
-        #     dt_prediccion.to_sql('base_inicial1', conn, if_exists='append', index=False)
-
-        
-        logging.info("SHAPE final_df")
-        logging.info(final_df.shape)
 
         return final_df
     except:
