@@ -68,6 +68,7 @@ def main(myblob: func.InputStream):
 
         base_prediccion = prediction_object.fun_dataset_prediccion(ypred=demanda_p, x_test=data_train_endpoint, escalador=scaler, nombres_datos_test=nombres_datos_test, datos_testeo=datos_test, fecha_test=fecha_test)
         base_prediccion2= base_prediccion[['fechahora', 'Prediccion', 'intervalo1']]
+        base_prediccion2 = base_prediccion2[base_prediccion2['fechahora'] < Fecha6]
 
         base_prediccion2.to_csv("/tmp/base_prediccion2.csv", index=False)
 
