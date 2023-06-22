@@ -43,10 +43,10 @@ def main(myblob: func.InputStream):
         # fecha_inicio_test, fecha_final_test = '2023-05-01', '2023-05-31'
         fecha2=fecha2.strftime('%Y-%m-%d')
         fecha3=fecha3.strftime('%Y-%m-%d')
-        fecha6=fecha6.strftime('%Y-%m-%d')
+        # fecha6=fecha6.strftime('%Y-%m-%d')
         logging.info(fecha2)
         logging.info(fecha3)
-        logging.info(fecha6)
+        # logging.info(fecha6)
         # fecha_inicio_test, fecha_final_test,fecha6 = fecha2,  fecha3, fecha6
         fecha_inicio_test, fecha_final_test , fecha6= "2023-05-01",  "2023-06-11", "2023-06-10" 
 
@@ -70,7 +70,8 @@ def main(myblob: func.InputStream):
 
         base_prediccion = prediction_object.fun_dataset_prediccion(ypred=demanda_p, x_test=data_train_endpoint, escalador=scaler, nombres_datos_test=nombres_datos_test, datos_testeo=datos_test, fecha_test=fecha_test)
         base_prediccion2= base_prediccion[['fechahora', 'Prediccion', 'intervalo1']]
-        base_prediccion2 = base_prediccion2[base_prediccion2['fechahora'] < fecha6]
+
+        base_prediccion2 = base_prediccion2[ base_prediccion2['fechahora'] < fecha6 ] 
 
         base_prediccion2.to_csv("/tmp/base_prediccion2.csv", index=False)
 
