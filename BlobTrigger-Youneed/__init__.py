@@ -10,6 +10,9 @@ from main import Predict
 from io import BytesIO
 from blob import upload_objects_to_container,get_all_object
 import sys
+from finall_df import final_df
+import datetime
+from datetime import timedelta
 
 
 def main(myblob: func.InputStream):
@@ -32,8 +35,18 @@ def main(myblob: func.InputStream):
         ruta_archivo = '/tmp/scaler.pkl'
         with open(ruta_archivo, 'rb') as f:
             scaler = pickle.load(f)
-    
-        fecha_inicio_test, fecha_final_test = '2023-05-01', '2023-05-31'
+        
+        fecha_actual = datetime.datetime.now()
+        fecha2 = fecha_actual.replace(day=1)
+        fecha3 = fecha_actual.replace(day=fecha_actual.day, month=fecha_actual.month+1)
+
+        # fecha_inicio_test, fecha_final_test = '2023-05-01', '2023-05-31'
+        fecha2=fecha2.strftime('%Y-%m-%d')
+        fecha3=fecha3.strftime('%Y-%m-%d')
+        logging.info(fecha2)
+        logging.info(fecha3)
+        # fecha_inicio_test, fecha_final_test = fecha2,  fecha3
+        fecha_inicio_test, fecha_final_test = "2023-05-01",  "2023-06-11"
 
         data_preparation_api=pd.read_csv("/tmp/train_set.csv")
         data_train_endpoint=pd.read_csv("/tmp/base_forecasting.csv")
@@ -54,18 +67,26 @@ def main(myblob: func.InputStream):
         
 
         base_prediccion = prediction_object.fun_dataset_prediccion(ypred=demanda_p, x_test=data_train_endpoint, escalador=scaler, nombres_datos_test=nombres_datos_test, datos_testeo=datos_test, fecha_test=fecha_test)
-
-        logging.info("base_prediccion check")
         base_prediccion2= base_prediccion[['fechahora', 'Prediccion', 'intervalo1']]
-        logging.info("base_prediccion2 check")
-
-        print(base_prediccion2)
 
         base_prediccion2.to_csv("/tmp/base_prediccion2.csv", index=False)
+
 
         upload_objects_to_container(["/tmp/base_prediccion2.csv"],"container-output")
 
         logging.info("upload_objects_to_container check")
+        
+        logging.info("Start final_df")
+        f_df = final_df()
+
+        logging.info(f_df.head(5))
+
+        f_df.to_csv("/tmp/final_df.csv")
+        upload_objects_to_container(["/tmp/final_df.csv"],"container-output")
+
+        logging.info("upload_objects_to_container final_df check")
+
+
     except:
-        logging.info('ERROR ##')
-        logging.info("Unexpected error:", sys.exc_info())
+        
+        logging.info("Unexpected error ##### init ####: %s", sys.exc_info())
