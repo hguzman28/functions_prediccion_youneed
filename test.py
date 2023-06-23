@@ -16,12 +16,15 @@ driver= '{ODBC Driver 18 for SQL Server}'
 def get_dt_historico():
     logging.info("START connection DB")
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-        query = "SELECT * FROM pruebas5"
+        query = "SELECT * FROM pruebas2"
         df = pd.read_sql_query(query, conn)
     logging.info("END connection DB")    
     return df    
 
 
+dt_historico = get_dt_historico()
+
+dt_historico.to_csv("df_jun.csv")
 def final_df():
     try:
         dt_historico = get_dt_historico()
@@ -122,4 +125,4 @@ def final_df():
         logging.info("Unexpected error ##### finall_df.py ###: %s", sys.exc_info())
 
 
-final_df()  
+ 

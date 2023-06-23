@@ -16,7 +16,7 @@ driver= '{ODBC Driver 17 for SQL Server}'
 def get_dt_historico():
     logging.info("START connection DB")
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-        query = "SELECT * FROM pruebas2"
+        query = "SELECT * FROM demanda_sein"
         df = pd.read_sql_query(query, conn)
     logging.info("END connection DB")    
     return df    
@@ -70,14 +70,14 @@ def final_df():
                         # Actualizar el registro en la base de datos
                         with pyodbc.connect(connection_string) as conn:
                             cursor = conn.cursor()
-                            query = f"UPDATE pruebas2 SET demanda = {demanda_actualizada} WHERE id = {id_historico}"
+                            query = f"UPDATE demanda_sein SET demanda = {demanda_actualizada} WHERE id = {id_historico}"
                             cursor.execute(query)
                             conn.commit()     
         #        
 
         logging.info("Agregar filas faltantes de dt_Data_to_dashboard a dt_historico")
 
-        # Insertar las filas nuevas en la tabla pruebas2
+        # Insertar las filas nuevas en la tabla demanda_sein
         # Agregar filas faltantes de dt_Data_to_dashboard a dt_historico
         # fechas_historico = set(dt_historico['fechahora'].astype(str).str[:10])
         # fechas_nuevas_prediccion = dt_prediccion[~dt_prediccion['fechahora'].astype(str).str[:10].isin(fechas_historico)]
@@ -101,8 +101,8 @@ def final_df():
                     Prediccion = row['Prediccion']
                     Prediccion = str(Prediccion).replace(",", ".")
                     intervalo1 = row['intervalo1']           
-                    # query = f"UPDATE pruebas2 SET demanda = {demanda} WHERE id = {id_historico}"
-                    query = f"INSERT INTO pruebas2 (fechahora, Prediccion, intervalo1) VALUES ('{fecha}', {Prediccion}, {intervalo1})"
+                    # query = f"UPDATE demanda_sein SET demanda = {demanda} WHERE id = {id_historico}"
+                    query = f"INSERT INTO demanda_sein (fechahora, Prediccion, intervalo1) VALUES ('{fecha}', {Prediccion}, {intervalo1})"
 
                     cursor.execute(query)
                 conn.commit()
