@@ -36,19 +36,24 @@ def main(myblob: func.InputStream):
         with open(ruta_archivo, 'rb') as f:
             scaler = pickle.load(f)
         
-        fecha_actual = datetime.datetime.now()
+        # fecha_actual = datetime.datetime.now()
+        fecha_actual = datetime.datetime(2023, 5, 20)
+
         fecha2 = fecha_actual.replace(day=1)
-        fecha3 = fecha_actual.replace(day=fecha_actual.day, month=fecha_actual.month+1)
+        fecha3 = fecha_actual.replace(day=11, month=fecha_actual.month+1)
+        fecha6 = fecha_actual.replace(day=10, month=fecha_actual.month+1)
 
         # fecha_inicio_test, fecha_final_test = '2023-05-01', '2023-05-31'
         fecha2=fecha2.strftime('%Y-%m-%d')
         fecha3=fecha3.strftime('%Y-%m-%d')
-        # fecha6=fecha6.strftime('%Y-%m-%d')
+        fecha6=fecha6.strftime('%Y-%m-%d')
+       
         logging.info(fecha2)
         logging.info(fecha3)
-        # logging.info(fecha6)
-        # fecha_inicio_test, fecha_final_test,fecha6 = fecha2,  fecha3, fecha6
-        fecha_inicio_test, fecha_final_test , fecha6= "2023-05-01",  "2023-06-11", "2023-06-10" 
+        logging.info(fecha6)
+        
+        fecha_inicio_test, fecha_final_test,fecha6 = fecha2,  fecha3, fecha6
+        # fecha_inicio_test, fecha_final_test , fecha6= "2023-05-01",  "2023-06-11", "2023-06-10" 
 
         data_preparation_api=pd.read_csv("/tmp/train_set.csv")
         data_train_endpoint=pd.read_csv("/tmp/base_forecasting.csv")

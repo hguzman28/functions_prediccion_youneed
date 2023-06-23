@@ -46,15 +46,24 @@ def final_df():
         for index, row in dt_historico.iterrows():
             fecha = row['fechahora']
             demanda = row['demanda']
+            
             if pd.isnull(demanda):
-                fecha_formatted = fecha.strftime("%Y-%m-%d")  # Formatear fecha como "AAAA-MM-DD"
-                if fecha_formatted in dt_Data_to_dashboard['fechahora'].astype(str).str[:10].values:
+                fecha_formatted = fecha.strftime("%Y-%m-%d %H:%M:%S")
+                logging.info(fecha_formatted)
+                logging.info(type(fecha_formatted))
+                logging.info(dt_Data_to_dashboard['fechahora'].values)
+                # fecha_formatted = fecha.strftime("%Y-%m-%d")  # Formatear fecha como "AAAA-MM-DD"
+                
+                # if fecha_formatted in dt_Data_to_dashboard['fechahora'].astype(str).str[:10].values:
+                if fecha_formatted in dt_Data_to_dashboard['fechahora'].astype(str).values:
                     id_historico = row['id']  # Obtener el id del registro en dt_historico
-                    demanda_actualizada = dt_Data_to_dashboard.loc[dt_Data_to_dashboard['fechahora'].astype(str).str[:10] == fecha_formatted, 'demanda'].values[0]
-
+                    # demanda_actualizada = dt_Data_to_dashboard.loc[dt_Data_to_dashboard['fechahora'].astype(str).str[:10] == fecha_formatted, 'demanda'].values[0]
+                    demanda_actualizada = dt_Data_to_dashboard.loc[ dt_Data_to_dashboard['fechahora'].astype(str) == fecha_formatted, 'demanda'].values[0]
+                    logging.info("Esta esa fecha y Demandas a actualizar##")
+                    logging.info(demanda_actualizada)
 
                     if len(str(demanda_actualizada)) > 1:
-                        demanda_actualizada = str(demanda_actualizada).replace(",", ".")
+                        demanda_actualizada = str(demanda_actualizada).replace(",", ".")    
                         dt_historico.at[index, 'demanda'] = demanda_actualizada
 
 
@@ -70,8 +79,12 @@ def final_df():
 
         # Insertar las filas nuevas en la tabla pruebas2
         # Agregar filas faltantes de dt_Data_to_dashboard a dt_historico
-        fechas_historico = set(dt_historico['fechahora'].astype(str).str[:10])
-        fechas_nuevas_prediccion = dt_prediccion[~dt_prediccion['fechahora'].astype(str).str[:10].isin(fechas_historico)]
+        # fechas_historico = set(dt_historico['fechahora'].astype(str).str[:10])
+        # fechas_nuevas_prediccion = dt_prediccion[~dt_prediccion['fechahora'].astype(str).str[:10].isin(fechas_historico)]
+
+        fechas_historico = set(dt_historico['fechahora'].astype(str))
+        fechas_nuevas_prediccion = dt_prediccion[~dt_prediccion['fechahora'].isin(fechas_historico)]
+
         fechas_nuevas_prediccion = fechas_nuevas_prediccion.fillna(0)
         print("#################### Tamaño fechas_nuevas_prediccion ####################")
         print(fechas_nuevas_prediccion.shape)
@@ -95,7 +108,7 @@ def final_df():
                 conn.commit()
      
 
-        final_df = pd.concat([dt_historico, dt_prediccion], ignore_index=True)
+        final_df = pd.concat([dt_historico, fechas_nuevas_prediccion], ignore_index=True)
 
         return final_df
     except:
