@@ -36,8 +36,8 @@ def main(myblob: func.InputStream):
         with open(ruta_archivo, 'rb') as f:
             scaler = pickle.load(f)
         
-        # fecha_actual = datetime.datetime.now()
-        fecha_actual = datetime.datetime(2023, 5, 20)
+        fecha_actual = datetime.datetime.now()
+        # fecha_actual = datetime.datetime(2023, 5, 20)
 
         fecha2 = fecha_actual.replace(day=1)
         fecha3 = fecha_actual.replace(day=11, month=fecha_actual.month+1)
