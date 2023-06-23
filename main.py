@@ -56,7 +56,9 @@ class Predict:
         #df_predict_ = df_predict.merge(df_lags[var_df_lag], on = 'fechahora', how='left')
         datos_test['Prediccion'] = df_yhat_inverse[['demanda']]
         #df_predict['fecha_'], df_predict['hour']= df_predict.fechahora.str.split(expand= True)[0],df_predict.fechahora.str.split(expand= True)[1]
-        datos_test['year'],datos_test['month'],datos_test['day'], datos_test['hour'] = DatetimeIndex(datos_test.fechahora).year,  DatetimeIndex(datos_test.fechahora).month, DatetimeIndex(datos_test.fechahora).day, DatetimeIndex(datos_test.fechahora).hour
+        #datos_test['year'],datos_test['month'],datos_test['day'], datos_test['hour'] = DatetimeIndex(datos_test.fechahora).year,  DatetimeIndex(datos_test.fechahora).month, DatetimeIndex(datos_test.fechahora).day, DatetimeIndex(datos_test.fechahora).hour
+        datos_test['year'],datos_test['month'],datos_test['day'], datos_test['hour_'], datos_test['minutes']  = DatetimeIndex(datos_test.fechahora).year,  DatetimeIndex(datos_test.fechahora).month, DatetimeIndex(datos_test.fechahora).day, DatetimeIndex(datos_test.fechahora).hour, DatetimeIndex(datos_test.fechahora).minute
+        datos_test['hour'] = datos_test['hour_'].astype(str).str.zfill(2) + ':' + datos_test['minutes'].astype(str).str.zfill(2)
         datos_test['Horapunta'] = where(datos_test.hour.isin(["17:30","17:45","18:00","18:15","18:30","18:45","19:00","19:15","19:30","19:45","20:00","20:15","20:30","20:45","21:00"]),1,0)
         max_prediccion = datos_test[datos_test['Horapunta']== 1].groupby(['year','month','day'],as_index= False)['Prediccion'].max()
         max_prediccion['maximo_predict'] = 1
