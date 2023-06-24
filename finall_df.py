@@ -49,9 +49,9 @@ def final_df():
             
             if pd.isnull(demanda):
                 fecha_formatted = fecha.strftime("%Y-%m-%d %H:%M:%S")
-                logging.info(fecha_formatted)
-                logging.info(type(fecha_formatted))
-                logging.info(dt_Data_to_dashboard['fechahora'].values)
+                # logging.info(fecha_formatted)
+                # logging.info(type(fecha_formatted))
+                # logging.info(dt_Data_to_dashboard['fechahora'].values)
                 # fecha_formatted = fecha.strftime("%Y-%m-%d")  # Formatear fecha como "AAAA-MM-DD"
                 
                 # if fecha_formatted in dt_Data_to_dashboard['fechahora'].astype(str).str[:10].values:
@@ -59,8 +59,8 @@ def final_df():
                     id_historico = row['id']  # Obtener el id del registro en dt_historico
                     # demanda_actualizada = dt_Data_to_dashboard.loc[dt_Data_to_dashboard['fechahora'].astype(str).str[:10] == fecha_formatted, 'demanda'].values[0]
                     demanda_actualizada = dt_Data_to_dashboard.loc[ dt_Data_to_dashboard['fechahora'].astype(str) == fecha_formatted, 'demanda'].values[0]
-                    logging.info("Esta esa fecha y Demandas a actualizar##")
-                    logging.info(demanda_actualizada)
+                    # logging.info("Esta esa fecha y Demandas a actualizar##")
+                    # logging.info(demanda_actualizada)
 
                     if len(str(demanda_actualizada)) > 1:
                         demanda_actualizada = str(demanda_actualizada).replace(",", ".")    
